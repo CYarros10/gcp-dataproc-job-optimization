@@ -69,13 +69,6 @@ Using a non-autoscaling cluster during this experimentation phase can lead to th
 
 Run your job on this appropriately-sized non-autoscaling cluster. If the CPU is maxing out, consider using C2 machine type. If memory is maxing out, consider using N2D-highmem machine types.  Also consider increasing the machine cores (while maintaining a consistent overall core count observed during sizing phase). 
 
-Use the following command to submit jobs to each new cluster
-
-```bash
-gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
-
-gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
-```
 
 **Monitoring CPU Utilization**
 
@@ -89,7 +82,7 @@ gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-tes
 **8 x n2-standard-2 = 1 min 40 seconds**
 
 ```bash
-gcloud dataproc clusters create $CLUSTER_NAME-testing \
+gcloud dataproc clusters create $CLUSTER_NAME-testing-2x8-standard \
   --master-machine-type=n2-standard-2 \
   --worker-machine-type=n2-standard-2 \
   --num-workers=8 \
@@ -99,15 +92,18 @@ gcloud dataproc clusters create $CLUSTER_NAME-testing \
   --worker-boot-disk-size=1000GB \
   --region=$REGION
 
-gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
+gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
+
+gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing-2x8-standard scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
 
 **4 x n2-standard-4 = 1 min 33 seconds**
 
 ```bash
-gcloud dataproc clusters delete $CLUSTER_NAME-testing
+gcloud dataproc clusters delete $CLUSTER_NAME-testing-2x8-standard \
+  --region=$REGION
 
-gcloud dataproc clusters create $CLUSTER_NAME-testing \
+gcloud dataproc clusters create $CLUSTER_NAME-testing-4x4-standard \
   --master-machine-type=n2-standard-4 \
   --worker-machine-type=n2-standard-4 \
   --num-workers=4 \
@@ -119,15 +115,16 @@ gcloud dataproc clusters create $CLUSTER_NAME-testing \
 
 gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 
-gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
+gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing-4x4-standard scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
 
 **2 x n2-standard-8 = 1 min 26 seconds**
 
 ```bash
-gcloud dataproc clusters delete $CLUSTER_NAME-testing
+gcloud dataproc clusters delete $CLUSTER_NAME-testing-4x4-standard \
+  --region=$REGION
 
-gcloud dataproc clusters create $CLUSTER_NAME-testing \
+gcloud dataproc clusters create $CLUSTER_NAME-testing-8x2-standard \
   --master-machine-type=n2-standard-8 \
   --worker-machine-type=n2-standard-8 \
   --num-workers=2 \
@@ -139,7 +136,7 @@ gcloud dataproc clusters create $CLUSTER_NAME-testing \
 
 gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 
-gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
+gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing-8x2-standard scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
 
 If you’re still observing performance issues, consider moving from pd-standard to pd-balanced or pd-ssd.
@@ -158,9 +155,10 @@ For similar costs, pd-standard 1000GB == pd-balanced 500GB == pd-ssd 250 GB.
 **2 x n2-standard-8-balanced = 1 min 26 seconds**
 
 ```bash
-gcloud dataproc clusters delete $CLUSTER_NAME-testing
+gcloud dataproc clusters delete $CLUSTER_NAME-testing-8x2-standard \
+  --region=$REGION
 
-gcloud dataproc clusters create $CLUSTER_NAME-testing \
+gcloud dataproc clusters create $CLUSTER_NAME-testing-8x2-balanced \
   --master-machine-type=n2-standard-8 \
   --worker-machine-type=n2-standard-8 \
   --num-workers=2 \
@@ -172,15 +170,16 @@ gcloud dataproc clusters create $CLUSTER_NAME-testing \
 
 gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 
-gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
+gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing-8x2-balanced scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
 
 **2 x n2-standard-8-ssd = 1 min 16 seconds**
 
 ```bash
-gcloud dataproc clusters delete $CLUSTER_NAME-testing
+gcloud dataproc clusters delete $CLUSTER_NAME-testing-8x2-balanced \
+  --region=$REGION
 
-gcloud dataproc clusters create $CLUSTER_NAME-testing \
+gcloud dataproc clusters create $CLUSTER_NAME-testing-8x2-ssd \
   --master-machine-type=n2-standard-8 \
   --worker-machine-type=n2-standard-8 \
   --num-workers=2 \
@@ -192,7 +191,7 @@ gcloud dataproc clusters create $CLUSTER_NAME-testing \
 
 gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 
-gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
+gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing-8x2-ssd scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
 
 Monitor HDFS Capacity to determine disk size. If this ever drops to zero, you’ll need to increase the persistent disk size.  If HDFS Capacity is too large for this job, consider lowering the disk size to save on storage costs.
@@ -200,9 +199,10 @@ Monitor HDFS Capacity to determine disk size. If this ever drops to zero, you’
 **2 x n2-standard-8-ssd-resized = 1 min 16 seconds**
 
 ```bash
-gcloud dataproc clusters delete $CLUSTER_NAME-testing
+gcloud dataproc clusters delete $CLUSTER_NAME-testing-8x2-ssd \
+  --region=$REGION
 
-gcloud dataproc clusters create $CLUSTER_NAME-testing \
+gcloud dataproc clusters create $CLUSTER_NAME-testing-8x2-ssd-costop \
   --master-machine-type=n2-standard-8 \
   --worker-machine-type=n2-standard-8 \
   --num-workers=2 \
@@ -214,7 +214,7 @@ gcloud dataproc clusters create $CLUSTER_NAME-testing \
 
 gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 
-gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
+gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing-8x2-ssd-costop scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
 
 ### 4. Optimize application-specific properties
@@ -229,7 +229,7 @@ sample job submit:
 ```bash
 gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 
-gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py --properties='spark.executor.cores=5,spark.driver.cores=5,spark.executor.instances=1,spark.executor.memory=25459m,spark.driver.memory=25459m,spark.executor.memoryOverhead=2829m,spark.default.parallelism=10,spark.sql.shuffle.partitions=10,spark.shuffle.spill.compress=true,spark.checkpoint.compress=true,spark.io.compresion.codex=snappy,spark.dynamicAllocation=true,spark.shuffle.service.enabled=true' -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
+gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing-8x2-ssd-costop scripts/spark_average_speed.py --properties='spark.executor.cores=5,spark.driver.cores=5,spark.executor.instances=1,spark.executor.memory=25459m,spark.driver.memory=25459m,spark.executor.memoryOverhead=2829m,spark.default.parallelism=10,spark.sql.shuffle.partitions=10,spark.shuffle.spill.compress=true,spark.checkpoint.compress=true,spark.io.compresion.codex=snappy,spark.dynamicAllocation=true,spark.shuffle.service.enabled=true' -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
 
 ### 5.  Handle edge-case workload spikes via an autoscaling policy

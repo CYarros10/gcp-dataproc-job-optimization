@@ -74,7 +74,7 @@ gsutil mb -c regional -l "$region" gs://"$bucket"
 
 bq mk "$bucket"
 
-gsutil cp scripts/spark_average_speed.py gs://"$bucket"/scripts/spark_average_speed.py
+gsutil cp spark_average_speed.py gs://"$bucket"/scripts/spark_average_speed.py
 
 echo "===================================================="
 echo " Loading data ..."
@@ -92,11 +92,11 @@ echo "===================================================="
 echo " Import autoscaling policies ..."
 
 gcloud dataproc autoscaling-policies import sizing-cluster-autoscaling-policy
-  --source=templates/sizing-cluster-autoscaling-policy.yml \
+  --source=../templates/sizing-cluster-autoscaling-policy.yml \
   --region="$region"
 
 gcloud dataproc autoscaling-policies import final-cluster-autoscaling-policy
-  --source=templates/final-cluster-autoscaling-policy.yml \
+  --source=../templates/final-cluster-autoscaling-policy.yml \
   --region="$region"
 
 echo "===================================================="
@@ -106,6 +106,6 @@ gcloud dataproc clusters create "$cluster"-sizing \
   --master-machine-type=n2-standard-2 \
   --worker-machine-type=n2-standard-2 \
   --master-boot-disk-type=pd-standard \
-  --master-boot-disk-size=1000GB
+  --master-boot-disk-size=1000GB \
   --autoscaling-policy=sizing-cluster-autoscaling-policy \ 
   --region="$region"

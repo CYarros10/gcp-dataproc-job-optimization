@@ -5,7 +5,7 @@ secondaryWorkerConfig:
   minInstances: 0
   maxInstances: 100
 basicAlgorithm:
-  cooldownPeriod: 5m
+  cooldownPeriod: 2m
   yarnConfig:
     scaleUpFactor: 1.0
     scaleDownFactor: 1.0
