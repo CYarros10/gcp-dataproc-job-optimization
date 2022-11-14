@@ -24,7 +24,7 @@ Once your job is running successfully, you can safely iterate on the configurati
 
 ### 1. Getting Started 
 
-Run the following code in a terminal to set up your Google Cloud project. 
+Fill in your environment variables and run the following code in a terminal to set up your Google Cloud project. 
 
 ```bash
 export PROJECT_ID=""
@@ -36,6 +36,15 @@ export TIMESTAMP
 
 ./scripts/setup.sh -p $PROJECT_ID -r $REGION -c $CLUSTER_NAME -b $BUCKET_NAME -t $TIMESTAMP
 ```
+
+This script will:
+
+1. Setup project and enable APIs
+2. Remove any old infrastructure related to this project (in case of previous runs)
+3. Create a Google Cloud Storage bucket and a BigQuery Dataset
+4. Load public data into a personal BigQuery Dataset
+5. Import autoscaling policies
+6. Create the first Dataproc sizing cluster
 
 **Monitoring Dataproc Jobs**
 ![Stack-Resources](images/monitoring-jobs.png)

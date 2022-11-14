@@ -55,6 +55,7 @@ gcloud services enable dataproc.googleapis.com
 gcloud services enable cloudbilling.googleapis.com
 gcloud services enable artifactregistry.googleapis.com
 gcloud services enable logging.googleapis.com
+gcloud services enable bigquery.googleapis.com
 
 
 echo "===================================================="
