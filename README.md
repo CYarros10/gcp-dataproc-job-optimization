@@ -56,7 +56,7 @@ A sizing cluster can help determine the right number of workers for your applica
 
 
 ```bash
-gsutil -m rm -r gs://$BUCKET_NAME/transformed-$EXPORT_TS
+gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 
 gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-sizing scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
@@ -72,7 +72,7 @@ Run your job on this appropriately-sized non-autoscaling cluster. If the CPU is 
 Use the following command to submit jobs to each new cluster
 
 ```bash
-gsutil -m rm -r gs://$BUCKET_NAME/transformed-$EXPORT_TS
+gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 
 gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
@@ -117,7 +117,7 @@ gcloud dataproc clusters create $CLUSTER_NAME-testing \
   --worker-boot-disk-size=1000GB \
   --region=$REGION
 
-gsutil -m rm -r gs://$BUCKET_NAME/transformed-$EXPORT_TS
+gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 
 gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
@@ -137,7 +137,7 @@ gcloud dataproc clusters create $CLUSTER_NAME-testing \
   --worker-boot-disk-size=1000GB \
   --region=$REGION
 
-gsutil -m rm -r gs://$BUCKET_NAME/transformed-$EXPORT_TS
+gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 
 gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
@@ -170,7 +170,7 @@ gcloud dataproc clusters create $CLUSTER_NAME-testing \
   --worker-boot-disk-size=500GB \
   --region=$REGION
 
-gsutil -m rm -r gs://$BUCKET_NAME/transformed-$EXPORT_TS
+gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 
 gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
@@ -190,7 +190,7 @@ gcloud dataproc clusters create $CLUSTER_NAME-testing \
   --worker-boot-disk-size=250GB \
   --region=$REGION
 
-gsutil -m rm -r gs://$BUCKET_NAME/transformed-$EXPORT_TS
+gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 
 gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
@@ -212,7 +212,7 @@ gcloud dataproc clusters create $CLUSTER_NAME-testing \
   --worker-boot-disk-size=30GB \
   --region=$REGION
 
-gsutil -m rm -r gs://$BUCKET_NAME/transformed-$EXPORT_TS
+gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 
 gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
@@ -227,7 +227,7 @@ Since this guide uses a simple spark application and small amount of data, you m
 sample job submit:
 
 ```bash
-gsutil -m rm -r gs://$BUCKET_NAME/transformed-$EXPORT_TS
+gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 
 gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing scripts/spark_average_speed.py --properties='spark.executor.cores=5,spark.driver.cores=5,spark.executor.instances=1,spark.executor.memory=25459m,spark.driver.memory=25459m,spark.executor.memoryOverhead=2829m,spark.default.parallelism=10,spark.sql.shuffle.partitions=10,spark.shuffle.spill.compress=true,spark.checkpoint.compress=true,spark.io.compresion.codex=snappy,spark.dynamicAllocation=true,spark.shuffle.service.enabled=true' -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
