@@ -92,11 +92,11 @@ echo "===================================================="
 echo " Import autoscaling policies ..."
 
 gcloud dataproc autoscaling-policies import sizing-cluster-autoscaling-policy \
-  --source=../templates/sizing-cluster-autoscaling-policy.yml \
+  --source=templates/sizing-cluster-autoscaling-policy.yml \
   --region="$region"
 
 gcloud dataproc autoscaling-policies import final-cluster-autoscaling-policy \
-  --source=../templates/final-cluster-autoscaling-policy.yml \
+  --source=templates/final-cluster-autoscaling-policy.yml \
   --region="$region"
 
 echo "===================================================="
@@ -109,3 +109,11 @@ gcloud dataproc clusters create "$cluster"-sizing \
   --master-boot-disk-size=1000GB \
   --autoscaling-policy=sizing-cluster-autoscaling-policy \
   --region="$region"
+
+
+echo "===================================================="
+echo " Customizing final workflow template ..."
+
+sed -i "s|%%BUCKET_NAME%%|$bucket|g" final-cluster-wtf.yml
+sed -i "s|%%TIMESTAMP%%|$timestamp|g" final-cluster-wtf.yml
+sed -i "s|%%REGION%%|$region|g" final-cluster-wtf.yml
