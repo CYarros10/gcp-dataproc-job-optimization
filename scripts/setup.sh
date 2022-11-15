@@ -91,11 +91,11 @@ bq extract \
 echo "===================================================="
 echo " Import autoscaling policies ..."
 
-gcloud dataproc autoscaling-policies import sizing-cluster-autoscaling-policy
+gcloud dataproc autoscaling-policies import sizing-cluster-autoscaling-policy \
   --source=../templates/sizing-cluster-autoscaling-policy.yml \
   --region="$region"
 
-gcloud dataproc autoscaling-policies import final-cluster-autoscaling-policy
+gcloud dataproc autoscaling-policies import final-cluster-autoscaling-policy \
   --source=../templates/final-cluster-autoscaling-policy.yml \
   --region="$region"
 
