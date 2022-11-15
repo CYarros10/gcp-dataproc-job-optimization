@@ -107,5 +107,5 @@ gcloud dataproc clusters create "$cluster"-sizing \
   --worker-machine-type=n2-standard-2 \
   --master-boot-disk-type=pd-standard \
   --master-boot-disk-size=1000GB \
-  --autoscaling-policy=sizing-cluster-autoscaling-policy \ 
+  --autoscaling-policy=sizing-cluster-autoscaling-policy \
   --region="$region"
