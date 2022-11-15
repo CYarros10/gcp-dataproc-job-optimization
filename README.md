@@ -80,7 +80,7 @@ Run your job on this appropriately-sized non-autoscaling cluster. If the CPU is 
 
 ![Stack-Resources](images/monitoring-yarn-memory.png)
 
-**8 x n2-standard-2 = 1 min 40 seconds**
+**8 x n2-standard-2 = 1 min 53 seconds**
 
 ```bash
 gcloud dataproc clusters create $CLUSTER_NAME-testing-2x8-standard \
@@ -98,7 +98,7 @@ gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing-2x8-standard scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
 
-**4 x n2-standard-4 = 1 min 33 seconds**
+**4 x n2-standard-4 = 1 min 48 seconds**
 
 ```bash
 gcloud dataproc clusters delete $CLUSTER_NAME-testing-2x8-standard \
@@ -119,7 +119,7 @@ gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing-4x4-standard scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
 
-**2 x n2-standard-8 = 1 min 26 seconds**
+**2 x n2-standard-8 = 1 min 31 seconds**
 
 ```bash
 gcloud dataproc clusters delete $CLUSTER_NAME-testing-4x4-standard \
@@ -174,7 +174,7 @@ gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
 gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-testing-8x2-balanced scripts/spark_average_speed.py -- gs://$BUCKET_NAME/raw-$TIMESTAMP/ gs://$BUCKET_NAME/transformed-$TIMESTAMP/
 ```
 
-**2 x n2-standard-8-ssd = 1 min 16 seconds**
+**2 x n2-standard-8-ssd = 1 min 21 seconds**
 
 ```bash
 gcloud dataproc clusters delete $CLUSTER_NAME-testing-8x2-balanced \
@@ -197,7 +197,7 @@ gcloud dataproc jobs submit pyspark --region=$REGION --cluster=$CLUSTER_NAME-tes
 
 Monitor HDFS Capacity to determine disk size. If this ever drops to zero, you’ll need to increase the persistent disk size.  If HDFS Capacity is too large for this job, consider lowering the disk size to save on storage costs.
 
-**2 x n2-standard-8-ssd-resized = 1 min 16 seconds**
+**2 x n2-standard-8-ssd-costop = 1 min 18 seconds**
 
 ```bash
 gcloud dataproc clusters delete $CLUSTER_NAME-testing-8x2-ssd \
@@ -226,6 +226,8 @@ If you’re still observing performance issues, you can begin to adjust applicat
 Since this guide uses a simple spark application and small amount of data, you may not see job performance improvement.  This section is more applicable for larger use-cases.
 
 sample job submit:
+
+**2 x n2-standard-8-ssd-costop-appop = 1 min 15 seconds**
 
 ```bash
 gsutil -m rm -r gs://$BUCKET_NAME/transformed-$TIMESTAMP
