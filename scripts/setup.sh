@@ -74,7 +74,7 @@ gsutil mb -c regional -l "$region" gs://"$bucket"
 
 bq mk "$bucket"
 
-gsutil cp spark_average_speed.py gs://"$bucket"/scripts/spark_average_speed.py
+gsutil cp scripts/spark_average_speed.py gs://"$bucket"/scripts/spark_average_speed.py
 
 echo "===================================================="
 echo " Loading data ..."
