@@ -286,6 +286,43 @@ There are several key advantages of using ephemeral clusters:
 
 - You don't need to maintain separate infrastructure for development, testing, and production. You can use the same definitions to create as many different versions of a cluster as you need when you need them.
 
+
+sample workflow template:
+
+```yaml
+jobs:
+- pysparkJob:
+    args:
+    - "gs://%%BUCKET_NAME%%/raw-%%TIMESTAMP%%/"
+    - "gs://%%BUCKET_NAME%%/transformed-%%TIMESTAMP%%/"
+    mainPythonFileUri: gs://%%BUCKET_NAME%%/scripts/spark_average_speed.py
+  stepId: spark_average_speed
+placement:
+  managedCluster:
+    clusterName: final-cluster-wft
+    config:
+      gceClusterConfig:
+        zoneUri: %%REGION%%-a
+      masterConfig:
+        diskConfig:
+          bootDiskSizeGb: 30
+          bootDiskType: pd-ssd
+        machineTypeUri: n2-standard-8
+        minCpuPlatform: AUTOMATIC
+        numInstances: 1
+        preemptibility: NON_PREEMPTIBLE
+      workerConfig:
+        diskConfig:
+          bootDiskSizeGb: 30
+          bootDiskType: pd-ssd
+        machineTypeUri: n2-standard-8
+        minCpuPlatform: AUTOMATIC
+        numInstances: 2
+        preemptibility: NON_PREEMPTIBLE
+```
+
+sample workflow template execution
+
 ```bash
 gcloud dataproc workflow-templates instantiate-from-file \
   --file templates/final-cluster-wft.yml \
