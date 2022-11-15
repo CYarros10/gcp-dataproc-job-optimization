@@ -255,6 +255,23 @@ Use ephemeral clusters (see step 6) to allow clusters to scale up, and delete th
 
 [Autoscaling clusters | Dataproc Documentation | Google Cloud](https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/autoscaling#how_autoscaling_works)
 
+sample template:
+
+```yaml
+workerConfig:
+  minInstances: 2
+  maxInstances: 2
+secondaryWorkerConfig:
+  minInstances: 0
+  maxInstances: 10
+basicAlgorithm:
+  cooldownPeriod: 5m
+  yarnConfig:
+    scaleUpFactor: 1.0
+    scaleDownFactor: 0
+    gracefulDecommissionTimeout: 0s
+```
+
 ### 6. Optimize cost and reusability via ephemeral Dataproc clusters
 
 There are several key advantages of using ephemeral clusters:
