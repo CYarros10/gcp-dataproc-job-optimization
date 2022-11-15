@@ -6,7 +6,8 @@
 
 1. [About](#About)
 2. [Guide](#Guide)
-3. [Next Steps](#Next-steps)
+3. [Results](#Results)
+4. [Next Steps](#Next-steps)
 
 ----
 
@@ -272,6 +273,14 @@ gcloud dataproc workflow-templates instantiate-from-file \
   --region $REGION
 ```
 
+
+----
+
+## Results
+
+Even in this small scale example. job performance was optimized by 71% (265 seconds -> 75 seconds).  And with a properly sized ephemeral cluster, you only pay for what is necessary.
+
+![Stack-Resources](images/monitoring-job-progress.png)
 
 ----
 
