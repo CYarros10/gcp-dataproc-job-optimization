@@ -1,8 +1,8 @@
 jobs:
 - pysparkJob:
     args:
-    - "gs://%%BUCKET_NAME%%/raw-%%TIMESTAMP%%/"
-    - "gs://%%BUCKET_NAME%%/transformed-%%TIMESTAMP%%/"
+     - --gcs_path_raw="gs://%%BUCKET_NAME%%/raw-%%TIMESTAMP%%/"
+     - --gcs_path_transformed="gs://%%BUCKET_NAME%%/transformed-%%TIMESTAMP%%/"
     mainPythonFileUri: gs://%%BUCKET_NAME%%/scripts/spark_average_speed.py
   stepId: spark_average_speed
 placement:

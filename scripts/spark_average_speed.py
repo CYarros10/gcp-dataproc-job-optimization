@@ -17,6 +17,7 @@ BigQuery Public Dataset nyc-tlc:yellow.trips to include an additional average
 speed column.
 """
 
+import argparse
 import io
 import csv
 from contextlib import closing
@@ -109,12 +110,29 @@ def main(spark_conf, gcs_path_raw, gcs_path_transformed):
     transformed_records_rdd.saveAsTextFile(gcs_path_transformed)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
-    spark_conf_obj = SparkConf()
-    spark_conf_obj.setAppName("AverageSpeedEnhancement")
-    spark_context = SparkContext(conf=spark_conf_obj)
+    spark_conf = SparkConf()
+    spark_conf.setAppName('AverageSpeedEnhancement')
+    spark_context = SparkContext(conf=spark_conf)
 
-    main(spark_conf=spark_context,
-         gcs_path_raw=sys.argv[1],
-         gcs_path_transformed=sys.argv[2])
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        '--gcs_path_raw',
+        dest='gcs_path_raw',
+        required=True,
+        help='Specify the full GCS wildcard path to the json files to enhance.'
+    )
+
+    parser.add_argument(
+        '--gcs_path_transformed',
+        dest='gcs_path_transformed',
+        required=True,
+        help='Specify the full GCS path prefix for the transformed json files. '
+    )
+    known_args, _ = parser.parse_known_args(None)
+
+    main(sc=spark_context,
+         gcs_path_raw=known_args.gcs_path_raw,
+         gcs_path_transformed=known_args.gcs_path_transformed)
