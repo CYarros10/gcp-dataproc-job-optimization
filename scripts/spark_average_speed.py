@@ -94,16 +94,11 @@ class AverageSpeedEnhancer(object):
         return csv_record
 
 
-def main(spark_conf, gcs_path_raw, gcs_path_transformed):
-    """
-    entry point. takes spark conf, an input gcs path, and an output gcs path.
-    transforms records by adding average speed value.
-    """
+def main(sc, gcs_path_raw, gcs_path_transformed):
     ase = AverageSpeedEnhancer()
-    file_strings_rdd = spark_conf.textFile(gcs_path_raw)
-    # Apply the speed enhancement logic defined in the AverageSpeedEnhancer
-    # class. Read the newline delimited json into dicts (note that this is
-    # automatically applied per line).
+    file_strings_rdd = sc.textFile(gcs_path_raw)
+    # Apply the speed enhancement logic defined in the AverageSpeedEnhancer class
+    # Read the newline delimited json into dicts (note that this is automatically applied per line).
     records_rdd = file_strings_rdd.map(
         lambda record_string: json.loads(record_string))
     transformed_records_rdd = records_rdd.map(ase.enhance_with_avg_speed)
