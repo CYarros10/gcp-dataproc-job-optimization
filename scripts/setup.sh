@@ -72,7 +72,7 @@ echo " Building infrastructure ..."
 
 gsutil mb -c regional -l "$region" gs://"$bucket"
 
-bq mk "$bucket"
+bq mk --dataset "$bucket"
 
 gsutil cp scripts/spark_average_speed.py gs://"$bucket"/scripts/spark_average_speed.py
 
@@ -100,6 +100,13 @@ gcloud dataproc autoscaling-policies import final-cluster-autoscaling-policy \
   --region="$region"
 
 echo "===================================================="
+echo " Customizing final workflow template ..."
+
+sed -i "s|%%BUCKET_NAME%%|$bucket|g" templates/final-cluster-wft.yml
+sed -i "s|%%TIMESTAMP%%|$timestamp|g" templates/final-cluster-wft.yml
+sed -i "s|%%REGION%%|$region|g" templates/final-cluster-wft.yml
+
+echo "===================================================="
 echo " Creating sizing cluster ..."
 
 gcloud dataproc clusters create "$cluster"-sizing \
@@ -110,10 +117,3 @@ gcloud dataproc clusters create "$cluster"-sizing \
   --autoscaling-policy=sizing-cluster-autoscaling-policy \
   --region="$region"
 
-
-echo "===================================================="
-echo " Customizing final workflow template ..."
-
-sed -i "s|%%BUCKET_NAME%%|$bucket|g" final-cluster-wtf.yml
-sed -i "s|%%TIMESTAMP%%|$timestamp|g" final-cluster-wtf.yml
-sed -i "s|%%REGION%%|$region|g" final-cluster-wtf.yml
